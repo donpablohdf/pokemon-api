@@ -6,6 +6,7 @@ import Favorites from './components/Favorites';
 import PokemonDetail from './components/PokemonDetail';
 import { getPokemonList, getPokemon } from './service/api';
 import { saveFavorite, getFavorites, removeFavorite } from './service/utils';
+import Navbar from './components/Navbar';
 
 function App() {
   const [pokemonList, setPokemonList] = useState([]);
@@ -20,7 +21,7 @@ function App() {
     };
 
     fetchData();
-  }, []);
+  }, [favoritesList]);
 
   useEffect(() => {
     const favorites = getFavorites();
@@ -54,6 +55,7 @@ function App() {
   return (
     <div className="App">
       <h1>Pokemon App</h1>
+      <Navbar favoriteList={favoritesList} />
       <SearchBar handleSearch={handleSearch} />
       <div className="container">
         <div className="pokemon-list">
