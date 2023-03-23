@@ -4,10 +4,6 @@ function PokemonCard({ pokemon, handleAddFavorite, handleRemoveFavorite, handleP
     const idImg = pokemon.url.split('/')[6];
     const [isFavorite, setIsFavorite] = useState(false);
 
-    // useEffect(() => {
-    //     setIsFavorite(handleIsPokemonFavorite());
-    // }, []);
-
     const handleClick = () => {
         handlePokemonClick(pokemon.url);
     };
@@ -15,6 +11,9 @@ function PokemonCard({ pokemon, handleAddFavorite, handleRemoveFavorite, handleP
     const handleIsPokemonFavorite = () => {
         return handleCheckIsPokemonFavorite(pokemon);
     };
+    useEffect(() => {
+        setIsFavorite(handleIsPokemonFavorite());
+    }, []);
 
     const handleCheckIsPokemonFavorite = (pokemon) => {
         return pokemon && pokemon.id && handleGetFavoritesList().some((p) => p.id === pokemon.id);
