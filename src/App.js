@@ -13,6 +13,7 @@ function App() {
   const [favoritesList, setFavoritesList] = useState([]);
   const [currentPokemon, setCurrentPokemon] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [theme, setTheme] = useState('light');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -21,7 +22,7 @@ function App() {
     };
 
     fetchData();
-  }, [favoritesList]);
+  }, []);
 
   useEffect(() => {
     const favorites = getFavorites();
@@ -52,10 +53,18 @@ function App() {
     setCurrentPokemon(response);
   };
 
+  const handleThemeChange = () => {
+    setTheme(theme === 'light' ? 'dark' : 'light');
+  };
+
+  const isPokemonFavorite = (pokemon) => {
+    return favoritesList.some((favorite) => favorite.id === pokemon.id);
+  };
+
   return (
-    <div className="App">
+    <div className={`App ${theme}`}>
+      <Navbar onThemeChange={handleThemeChange} favoriteList={favoritesList} />
       <h1>Pokemon App</h1>
-      <Navbar favoriteList={favoritesList} />
       <SearchBar handleSearch={handleSearch} />
       <div className="container">
         <div className="pokemon-list">
@@ -65,7 +74,7 @@ function App() {
               pokemon={pokemon}
               handleAddFavorite={handleAddFavorite}
               handleRemoveFavorite={handleRemoveFavorite}
-              favoritesList={favoritesList}
+              isFavorite={isPokemonFavorite(pokemon)}
               handlePokemonClick={handlePokemonClick}
             />
           ))}
@@ -81,7 +90,9 @@ function App() {
             handleAddFavorite={handleAddFavorite}
             handleRemoveFavorite={handleRemoveFavorite}
             favoritesList={favoritesList}
+            isFavorite={isPokemonFavorite(currentPokemon)}
           />
+
         )}
       </div>
     </div>

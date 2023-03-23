@@ -9,7 +9,7 @@ function Navbar({ onThemeChange, favoriteList }) {
 
   return (
     <nav className="navbar">
-      <h1>Pokedex</h1>
+      
       <div className="nav-buttons">
         <button onClick={handleFavoritesClick}>
           {favoriteList.length ? <FaHeart /> : <FaRegHeart />}

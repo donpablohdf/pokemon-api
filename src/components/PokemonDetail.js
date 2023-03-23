@@ -1,6 +1,4 @@
 import React from 'react';
-//import '../css/PokemonDetail.css';
-//import { capitalize } from '../service/utils';
 
 function PokemonDetail({
   pokemon,
@@ -20,6 +18,7 @@ function PokemonDetail({
   } = pokemon;
 
   const isFavorite = favoritesList.some((favorite) => favorite.id === id);
+  
 
   const handleFavoriteClick = () => {
     if (isFavorite) {

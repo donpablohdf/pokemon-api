@@ -1,38 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import '../css/PokemonCard.css';
 
-function PokemonCard({ pokemon, handleAddFavorite, handleRemoveFavorite, favoritesList, handlePokemonClick }) {
+function PokemonCard({ pokemon, handleAddFavorite, handleRemoveFavorite, handlePokemonClick }) {
+    const idImg = pokemon.url.split('/')[6];
     const [isFavorite, setIsFavorite] = useState(false);
-    const idImg = pokemon.url.split('/')[6]
 
-    useEffect(() => {
-        const isPokemonFavorite = favoritesList.some(
-            (favorite) => favorite.id === pokemon.id
-        );
-        setIsFavorite(isPokemonFavorite);
-    }, [favoritesList, pokemon.id]);
+    // useEffect(() => {
+    //     setIsFavorite(handleIsPokemonFavorite());
+    // }, []);
 
     const handleClick = () => {
         handlePokemonClick(pokemon.url);
     };
 
-    const handleFavoriteClick = (event) => {
+    const handleIsPokemonFavorite = () => {
+        return handleCheckIsPokemonFavorite(pokemon);
+    };
+
+    const handleCheckIsPokemonFavorite = (pokemon) => {
+        return pokemon && pokemon.id && handleGetFavoritesList().some((p) => p.id === pokemon.id);
+    };
+
+    const handleAddFavoriteClick = (event) => {
         event.stopPropagation();
+        handleAddFavorite(pokemon);
+        setIsFavorite(true);
+    };
 
+    const handleRemoveFavoriteClick = (event) => {
+        event.stopPropagation();
+        handleRemoveFavorite(pokemon);
+        setIsFavorite(false);
+    };
+
+    const handleFavoriteClick = (event) => {
         if (isFavorite) {
-            handleRemoveFavorite(pokemon);
+            handleRemoveFavoriteClick(event);
         } else {
-            handleAddFavorite(pokemon);
+            handleAddFavoriteClick(event);
         }
+    };
 
-        setIsFavorite(!isFavorite);
+    const handleGetFavoritesList = () => {
+        return JSON.parse(localStorage.getItem('favoritesList')) || [];
     };
 
     return (
         <div className="pokemon-card" onClick={handleClick}>
             <div className="pokemon-image">
                 <img
-                    src={'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/' + idImg + '.png'}
+                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/${idImg}.png`}
                     alt={pokemon.name}
                 />
             </div>
@@ -44,6 +60,7 @@ function PokemonCard({ pokemon, handleAddFavorite, handleRemoveFavorite, favorit
             </div>
         </div>
     );
+
 }
 
 export default PokemonCard;
