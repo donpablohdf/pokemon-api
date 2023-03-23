@@ -7,6 +7,9 @@ import PokemonDetail from './components/PokemonDetail';
 import { getPokemonList, getPokemon } from './service/api';
 import { saveFavorite, getFavorites, removeFavorite } from './service/utils';
 import Navbar from './components/Navbar';
+window.addEventListener('beforeunload', function () {
+  localStorage.clear();
+});
 
 function App() {
   const [pokemonList, setPokemonList] = useState([]);
@@ -79,21 +82,44 @@ function App() {
             />
           ))}
         </div>
+        <div className="second-column">
+          {searchTerm !== '' && (
+            <div>
+              Resultados de búsqueda para: <strong>{searchTerm}</strong>
+              {pokemonList.length === 0 ? (
+                <p>No se encontraron resultados para la búsqueda.</p>
+              ) : (
+                pokemonList.map((pokemon, index) => (
+                  <PokemonCard
+                    key={index}
+                    pokemon={pokemon}
+                    handleAddFavorite={handleAddFavorite}
+                    handleRemoveFavorite={handleRemoveFavorite}
+                    isFavorite={isPokemonFavorite(pokemon)}
+                    handlePokemonClick={handlePokemonClick}
+                  />
+                ))
+              )}
+            </div>
+          )}
+        </div>
         <Favorites
           favoritesList={favoritesList}
           handleRemoveFavorite={handleRemoveFavorite}
           handlePokemonClick={handlePokemonClick}
         />
-        {currentPokemon && (
-          <PokemonDetail
-            pokemon={currentPokemon}
-            handleAddFavorite={handleAddFavorite}
-            handleRemoveFavorite={handleRemoveFavorite}
-            favoritesList={favoritesList}
-            isFavorite={isPokemonFavorite(currentPokemon)}
-          />
+        <div className='detail-column'>
+          {currentPokemon && (
+            <PokemonDetail
+              pokemon={currentPokemon}
+              handleAddFavorite={handleAddFavorite}
+              handleRemoveFavorite={handleRemoveFavorite}
+              favoritesList={favoritesList}
+              isFavorite={isPokemonFavorite(currentPokemon)}
+            />
 
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
