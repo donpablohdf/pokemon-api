@@ -10,15 +10,16 @@ function PokemonCard({
     handlePokemonClick,
     favoritesList
 }) {
+    //console.log(pokemon)
     const [favorite, setFavorite] = useState(isFavorite);
     const idImg = pokemon.url.split('/')[6];
     useEffect(() => {
-        setFavorite(favoritesList.some((favoriteD) => favoriteD=== pokemon))
+        setFavorite(favoritesList.some((favoriteD) => favoriteD.name=== pokemon.name))
 
     }, [favorite, favoritesList, pokemon]);
 
     const handleClick = () => {
-        handlePokemonClick(pokemon.url);
+        handlePokemonClick(pokemon.url, pokemon.name);
     };
 
     const handleFavoriteClick = (event) => {

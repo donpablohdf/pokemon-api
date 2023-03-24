@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 function PokemonDetail({
   pokemon,
   handleAddFavorite,
   handleRemoveFavorite,
   favoritesList,
+  isFavorite,
+  consFavorite
 }) {
+  //console.log(pokemon)
   const {
     id,
     name,
@@ -17,23 +20,32 @@ function PokemonDetail({
     stats,
   } = pokemon;
 
-  const isFavorite = favoritesList.some((favorite) => favorite.id === id);
-  
+  // console.log(consFavorite)
+  // console.log(favoritesList)
+  const [favorite, setFavorite] = useState(isFavorite);
+  useEffect(() => {
+    setFavorite(favoritesList.some((favoriteD) => favoriteD.name=== consFavorite.name))
 
-  const handleFavoriteClick = () => {
-    if (isFavorite) {
-      handleRemoveFavorite(pokemon);
-    } else {
-      handleAddFavorite(pokemon);
-    }
-  };
+}, [consFavorite, favoritesList]);
+
+const handleFavoriteClick = (event) => {
+  if (favorite) {
+      event.stopPropagation();
+      handleRemoveFavorite(consFavorite);
+      setFavorite(false)
+  } else {
+      event.stopPropagation();
+      handleAddFavorite(consFavorite);
+      setFavorite(true)
+  }
+};
 
   return (
     <div className="pokemon-detail">
       <div className="pokemon-detail-header">
         <h2>{name}</h2>
         <button onClick={handleFavoriteClick}>
-          {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+          {favorite ? 'Remove from Favorites' : 'Add to Favorites'}
         </button>
       </div>
       <div className="pokemon-detail-body">

@@ -13,5 +13,6 @@ export const searchPokemon = async (searchTerm = '') => {
 
 export const getPokemon = async (url) => {
     const response = await axios.get(url);
+    
     return response.data;
 };

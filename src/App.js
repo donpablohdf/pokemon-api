@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import './css/App.css';
 import PokemonCard from './components/PokemonCard';
 import SearchBar from './components/SearchBar';
@@ -17,6 +16,7 @@ function App() {
   const [favoritesList, setFavoritesList] = useState([]);
   const [currentPokemon, setCurrentPokemon] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [consFavorite, setConsFavorite] = useState('');
   const [theme, setTheme] = useState('light');
 
   useEffect(() => {
@@ -25,6 +25,10 @@ function App() {
       setPokemonList(response.results);
     };
     fetchData();
+    
+  }, []);
+  useEffect(() => {
+    
     const favorites = getFavorites();
     setFavoritesList(favorites);
   }, []);
@@ -37,7 +41,7 @@ function App() {
   const handleRemoveFavorite = (pokemon) => {
     removeFavorite(pokemon);
     const newFavoritesList = favoritesList.filter(
-      (favorite) => favorite !== pokemon
+      (favorite) => favorite.name !== pokemon.name
     );
     setFavoritesList(newFavoritesList);
   };
@@ -48,9 +52,11 @@ function App() {
     setPokemonList(response.results);
   };
 
-  const handlePokemonClick = async (url) => {
+  const handlePokemonClick = async (url, name) => {
     const response = await getPokemon(url);
+    setConsFavorite({name: name, url: url})
     setCurrentPokemon(response);
+    
   };
 
   const handleThemeChange = () => {
@@ -58,9 +64,10 @@ function App() {
   };
 
   const isPokemonFavorite = (pokemon) => {
-    return favoritesList.some((favorite) => favorite.id === pokemon.id);
-  };
+    console.log("ES FAVORITO" +favoritesList.some((favorite) => favorite.name === pokemon.name))
+    return favoritesList.some((favorite) => favorite.name === pokemon.name);
 
+  };
   return (
     <div className={`App ${theme}`}>
       <Navbar onThemeChange={handleThemeChange} favoriteList={favoritesList} />
@@ -72,7 +79,6 @@ function App() {
 
             <PokemonCard
               key={index}
-              //id={uuidv4()}
               pokemon={pokemon}
               handleAddFavorite={handleAddFavorite}
               handleRemoveFavorite={handleRemoveFavorite}
@@ -92,7 +98,6 @@ function App() {
                 pokemonList.map((pokemon, index) => (
                   <PokemonCard
                     key={index}
-                    //id={uuidv4()}
                     pokemon={pokemon}
                     handleAddFavorite={handleAddFavorite}
                     handleRemoveFavorite={handleRemoveFavorite}
@@ -116,8 +121,9 @@ function App() {
               pokemon={currentPokemon}
               handleAddFavorite={handleAddFavorite}
               handleRemoveFavorite={handleRemoveFavorite}
+              isFavorite={isPokemonFavorite(consFavorite)}
               favoritesList={favoritesList}
-              isFavorite={isPokemonFavorite(currentPokemon)}
+              consFavorite={consFavorite}
             />
 
           )}
