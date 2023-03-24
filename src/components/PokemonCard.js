@@ -1,46 +1,36 @@
 import React, { useState, useEffect } from 'react';
 
-function PokemonCard({ pokemon, handleAddFavorite, handleRemoveFavorite, handlePokemonClick }) {
+
+function PokemonCard({
+    //id,
+    pokemon,
+    handleAddFavorite,
+    handleRemoveFavorite,
+    isFavorite,
+    handlePokemonClick,
+    favoritesList
+}) {
+    const [favorite, setFavorite] = useState(isFavorite);
     const idImg = pokemon.url.split('/')[6];
-    const [isFavorite, setIsFavorite] = useState(false);
+    useEffect(() => {
+        setFavorite(favoritesList.some((favoriteD) => favoriteD=== pokemon))
+
+    }, [favorite, favoritesList, pokemon]);
 
     const handleClick = () => {
         handlePokemonClick(pokemon.url);
     };
 
-    const handleIsPokemonFavorite = () => {
-        return handleCheckIsPokemonFavorite(pokemon);
-    };
-    useEffect(() => {
-        setIsFavorite(handleIsPokemonFavorite());
-    }, []);
-
-    const handleCheckIsPokemonFavorite = (pokemon) => {
-        return pokemon && pokemon.id && handleGetFavoritesList().some((p) => p.id === pokemon.id);
-    };
-
-    const handleAddFavoriteClick = (event) => {
-        event.stopPropagation();
-        handleAddFavorite(pokemon);
-        setIsFavorite(true);
-    };
-
-    const handleRemoveFavoriteClick = (event) => {
-        event.stopPropagation();
-        handleRemoveFavorite(pokemon);
-        setIsFavorite(false);
-    };
-
     const handleFavoriteClick = (event) => {
-        if (isFavorite) {
-            handleRemoveFavoriteClick(event);
+        if (favorite) {
+            event.stopPropagation();
+            handleRemoveFavorite(pokemon);
+            setFavorite(false)
         } else {
-            handleAddFavoriteClick(event);
+            event.stopPropagation();
+            handleAddFavorite(pokemon);
+            setFavorite(true)
         }
-    };
-
-    const handleGetFavoritesList = () => {
-        return JSON.parse(localStorage.getItem('favoritesList')) || [];
     };
 
     return (
@@ -53,8 +43,10 @@ function PokemonCard({ pokemon, handleAddFavorite, handleRemoveFavorite, handleP
             </div>
             <div className="pokemon-info">
                 <h2>{pokemon.name}</h2>
-                <button className={`favorite-button ${isFavorite ? 'favorited' : ''}`} onClick={handleFavoriteClick}>
-                    {isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+                <button
+                    className={`favorite-button ${favorite ? 'favorited' : ''}`}
+                    onClick={handleFavoriteClick}>
+                    {favorite ? 'Remove from favorites' : 'Add to favorites'}
                 </button>
             </div>
         </div>

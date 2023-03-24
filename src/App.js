@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import './css/App.css';
 import PokemonCard from './components/PokemonCard';
 import SearchBar from './components/SearchBar';
 import Favorites from './components/Favorites';
 import PokemonDetail from './components/PokemonDetail';
-import { getPokemonList, getPokemon } from './service/api';
+import { getPokemonList, getPokemon, searchPokemon } from './service/api';
 import { saveFavorite, getFavorites, removeFavorite } from './service/utils';
 import Navbar from './components/Navbar';
 window.addEventListener('beforeunload', function () {
@@ -23,11 +24,7 @@ function App() {
       const response = await getPokemonList();
       setPokemonList(response.results);
     };
-
     fetchData();
-  }, []);
-
-  useEffect(() => {
     const favorites = getFavorites();
     setFavoritesList(favorites);
   }, []);
@@ -40,14 +37,14 @@ function App() {
   const handleRemoveFavorite = (pokemon) => {
     removeFavorite(pokemon);
     const newFavoritesList = favoritesList.filter(
-      (favorite) => favorite.id !== pokemon.id
+      (favorite) => favorite !== pokemon
     );
     setFavoritesList(newFavoritesList);
   };
 
   const handleSearch = async (searchTerm) => {
     setSearchTerm(searchTerm);
-    const response = await getPokemonList(searchTerm);
+    const response = await searchPokemon(searchTerm);
     setPokemonList(response.results);
   };
 
@@ -72,13 +69,16 @@ function App() {
       <div className="container">
         <div className="pokemon-list">
           {pokemonList.map((pokemon, index) => (
+
             <PokemonCard
               key={index}
+              //id={uuidv4()}
               pokemon={pokemon}
               handleAddFavorite={handleAddFavorite}
               handleRemoveFavorite={handleRemoveFavorite}
               isFavorite={isPokemonFavorite(pokemon)}
               handlePokemonClick={handlePokemonClick}
+              favoritesList={favoritesList}
             />
           ))}
         </div>
@@ -92,11 +92,13 @@ function App() {
                 pokemonList.map((pokemon, index) => (
                   <PokemonCard
                     key={index}
+                    //id={uuidv4()}
                     pokemon={pokemon}
                     handleAddFavorite={handleAddFavorite}
                     handleRemoveFavorite={handleRemoveFavorite}
                     isFavorite={isPokemonFavorite(pokemon)}
                     handlePokemonClick={handlePokemonClick}
+                    favoritesList={favoritesList}
                   />
                 ))
               )}

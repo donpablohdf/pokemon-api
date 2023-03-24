@@ -1,4 +1,5 @@
 import React from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import PokemonCard from './PokemonCard';
 
 function Favorites({ favoritesList, handleRemoveFavorite, handlePokemonClick }) {
@@ -9,10 +10,12 @@ function Favorites({ favoritesList, handleRemoveFavorite, handlePokemonClick }) 
         favoritesList.map((pokemon, index) => (
           <PokemonCard
             key={index}
+            //id={uuidv4()}
             pokemon={pokemon}
             handleRemoveFavorite={handleRemoveFavorite}
             favoritesList={favoritesList}
             handlePokemonClick={handlePokemonClick}
+            isFavorite={true}
           />
         ))
       ) : (
