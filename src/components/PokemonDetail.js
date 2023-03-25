@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../css/PokemonDetail.css'
 
 function PokemonDetail({
   pokemon,
@@ -8,7 +9,7 @@ function PokemonDetail({
   isFavorite,
   consFavorite
 }) {
-  //console.log(pokemon)
+  console.log(pokemon)
   const {
     id,
     name,
@@ -41,14 +42,15 @@ const handleFavoriteClick = (event) => {
 };
 
   return (
-    <div className="pokemon-detail">
-      <div className="pokemon-detail-header">
+    <div className="pokemon-detail border rounded p-4">
+      
+      <div className="pokemon-detail-header d-flex flex-column ">
         <h2>{name}</h2>
-        <button onClick={handleFavoriteClick}>
+        <button className={`m-2 btn ${favorite ? 'btn-outline-info' : 'btn-outline-dark'}`} onClick={handleFavoriteClick}>
           {favorite ? 'Remove from Favorites' : 'Add to Favorites'}
         </button>
       </div>
-      <div className="pokemon-detail-body">
+      <div className="pokemon-detail-body d-flex flex-column">
         <img src={sprites.front_default} alt={name} />
         <div className="pokemon-detail-info">
           <p>

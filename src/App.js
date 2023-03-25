@@ -14,6 +14,7 @@ function App() {
   const [pokemonList, setPokemonList] = useState([]);
   const [nextPokemonList, setNextPokemonList] = useState('');
   const [prevPokemonList, setPrevPokemonList] = useState('');
+  const [Npag, setNpag] = useState(1);
   const [searchPokemonList, setSearchPokemonList] = useState([]);
   const [favoritesList, setFavoritesList] = useState([]);
   const [currentPokemon, setCurrentPokemon] = useState(null);
@@ -52,9 +53,12 @@ function App() {
   };
 
   const handleSearch = async (searchTerm) => {
-    setSearchTerm(searchTerm);
-    const response = await searchPokemon(searchTerm);
-    setSearchPokemonList(response);
+    setSearchPokemonList('');
+    if (searchTerm !== '') {
+      setSearchTerm(searchTerm);
+      const response = await searchPokemon(searchTerm);
+      setSearchPokemonList(response);
+    }
   };
 
   const handlePokemonClick = async (url, name) => {
@@ -63,10 +67,11 @@ function App() {
     setCurrentPokemon(response);
 
   };
-  const handlePagPokemonList = async (url) => {
+  const handlePagPokemonList = async (url, pag) => {
     const response = await pagPokemonList(url);
-    response.next ? setNextPokemonList(response.next) : setNextPokemonList('')
+    pag === 'next' ? setNpag(Npag + 1) : setNpag(Npag - 1)
     response.previous ? setPrevPokemonList(response.previous) : setPrevPokemonList('')
+    response.next ? setNextPokemonList(response.next) : setNextPokemonList('')
     setPokemonList(response.results);
   };
 
@@ -81,11 +86,16 @@ function App() {
   return (
     <div className={`App ${theme}`}>
       <Navbar onThemeChange={handleThemeChange} handleSearch={handleSearch} />
-      <h1>Pokemon App</h1>
+
       <div className="container">
         <div className="pokemon-list">
-          {nextPokemonList? <button onClick={() =>{handlePagPokemonList(nextPokemonList)}}>Next</button> : ''}
-          {prevPokemonList? <button onClick={() =>{handlePagPokemonList(prevPokemonList)}}>previous</button> : ''}
+
+          <div className='p-2 border border-success rounded mb-4 d-flex justify-content-between align-items-center'>
+
+            {prevPokemonList ? <button className='btn-pag btn btn-outline-info' onClick={() => { handlePagPokemonList(prevPokemonList, '') }}>{'<<'}</button> : <button className='btn-pag btn "btn btn-outline-light' disabled>{'<<'}</button>}
+            <h6>{Npag}</h6>
+            {nextPokemonList ? <button className='btn-pag btn btn-outline-info' onClick={() => { handlePagPokemonList(nextPokemonList, 'next') }}>{'>>'}</button> : <button className='btn-pag btn "btn btn-outline-light' disabled>{'>>'}</button>}
+          </div>
           {pokemonList.map((pokemon, index) => (
 
             <PokemonCard
@@ -99,27 +109,35 @@ function App() {
             />
           ))}
         </div>
-        <div className="second-column">
-          {searchTerm !== '' && (
-            <div>
-              Resultados de búsqueda para: <strong>{searchTerm}</strong>
-              {searchPokemonList.length === 0 ? (
-                <p>No se encontraron resultados para la búsqueda.</p>
-              ) : (
-                searchPokemonList.map((pokemon, index) => (
-                  <PokemonCard
-                    key={index}
-                    pokemon={pokemon}
-                    handleAddFavorite={handleAddFavorite}
-                    handleRemoveFavorite={handleRemoveFavorite}
-                    isFavorite={isPokemonFavorite(pokemon)}
-                    handlePokemonClick={handlePokemonClick}
-                    favoritesList={favoritesList}
-                  />
-                ))
-              )}
+        <div className="search-column">
+          <>
+            <div className='p-2 border border-success rounded mb-4 d-flex flex-column'>
+              <h6>Search </h6>
+              {searchPokemonList.length > 0 ? (
+                <p>{searchPokemonList.length} matches for  <strong>{searchTerm}</strong></p>
+              ) : ('')}
             </div>
-          )}
+            {searchTerm !== '' && (
+              <div>
+                {searchPokemonList.length === 0 ? (
+                  <p>No se encontraron resultados para la búsqueda.</p>
+                ) : (
+                  searchPokemonList.map((pokemon, index) => (
+                    <PokemonCard
+                      key={index}
+                      pokemon={pokemon}
+                      handleAddFavorite={handleAddFavorite}
+                      handleRemoveFavorite={handleRemoveFavorite}
+                      isFavorite={isPokemonFavorite(pokemon)}
+                      handlePokemonClick={handlePokemonClick}
+                      favoritesList={favoritesList}
+                    />
+                  ))
+                )}
+              </div>
+
+            )}
+          </>
         </div>
         <Favorites
           favoritesList={favoritesList}
@@ -127,6 +145,10 @@ function App() {
           handlePokemonClick={handlePokemonClick}
         />
         <div className='detail-column'>
+          <div className='p-2 border border-success rounded mb-4 d-flex justify-content-between align-items-center'>
+            <h6>Pokemon Detail </h6>
+            {currentPokemon &&(<button className='btn-pag btn btn-outline-info' onClick={() => { setCurrentPokemon(null) }}>Reset</button>)}
+          </div>
           {currentPokemon && (
             <PokemonDetail
               pokemon={currentPokemon}

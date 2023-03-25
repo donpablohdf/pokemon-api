@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import '../css/PokemonCard.css'
 
 
 function PokemonCard({
@@ -45,7 +46,7 @@ function PokemonCard({
             <div className="pokemon-info">
                 <h2>{pokemon.name}</h2>
                 <button
-                    className={`favorite-button ${favorite ? 'favorited' : ''}`}
+                    className={`m-2 btn ${favorite ? 'btn-outline-info' : 'btn-outline-dark'}`}
                     onClick={handleFavoriteClick}>
                     {favorite ? 'Remove from favorites' : 'Add to favorites'}
                 </button>

@@ -1,0 +1,69 @@
+.pokemon-card {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    background-color: azure;
+    font-size: 2rem;
+}
+
+.App.dark .pokemon-card {
+    background-color: rgb(255, 255, 255);
+}
+
+.pokemon-card:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.pokemon-card img {
+    width: 100%;
+    height: 70%;
+    object-fit: contain;
+}
+
+.pokemon-card .card-body {
+    height: 30%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #fff;
+    border-radius: 0 0 10px 10px;
+}
+
+.pokemon-card h2 {
+    font-size: 2rem;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    text-transform: capitalize;
+}
+
+@media only screen and (max-width: 990px) {
+    .pokemon-card h2 {
+        font-size: 1rem;
+    }
+}
+
+@media only screen and (max-width: 576px) {
+    .pokemon-card h2 {
+        font-size: .85rem;
+    }
+}
+
+.pokemon-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.pokemon-card button {
+
+    --bs-btn-padding-y: .25rem;
+    --bs-btn-padding-x: .5rem;
+    --bs-btn-font-size: .75rem;
+}
