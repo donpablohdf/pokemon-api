@@ -9,7 +9,6 @@ function PokemonDetail({
   isFavorite,
   consFavorite
 }) {
-  console.log(pokemon)
   const {
     id,
     name,
@@ -21,8 +20,7 @@ function PokemonDetail({
     stats,
   } = pokemon;
 
-  // console.log(consFavorite)
-  // console.log(favoritesList)
+  
   const [favorite, setFavorite] = useState(isFavorite);
   useEffect(() => {
     setFavorite(favoritesList.some((favoriteD) => favoriteD.name=== consFavorite.name))

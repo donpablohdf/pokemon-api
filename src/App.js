@@ -1,16 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from "react";
+import { Context } from "./store/appContext";
 import './css/App.css';
 import PokemonCard from './components/PokemonCard';
 import Favorites from './components/Favorites';
 import PokemonDetail from './components/PokemonDetail';
-import { getPokemonList, getPokemon, searchPokemon, pagPokemonList } from './service/api';
-import { saveFavorite, getFavorites, removeFavorite } from './service/utils';
 import Navbar from './components/Navbar';
 window.addEventListener('beforeunload', function () {
   localStorage.clear();
 });
 
 function App() {
+  const { store, actions } = useContext(Context);
+
   const [pokemonList, setPokemonList] = useState([]);
   const [nextPokemonList, setNextPokemonList] = useState('');
   const [prevPokemonList, setPrevPokemonList] = useState('');
@@ -24,7 +25,7 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await getPokemonList();
+      const response = await actions.getPokemonList();
       response.next ? setNextPokemonList(response.next) : setNextPokemonList('')
       response.previous ? setPrevPokemonList(response.previous) : setPrevPokemonList('')
 
@@ -32,20 +33,20 @@ function App() {
     };
     fetchData();
 
-  }, []);
+  }, [actions]);
   useEffect(() => {
 
-    const favorites = getFavorites();
+    const favorites = actions.getFavorites();
     setFavoritesList(favorites);
-  }, []);
+  }, [actions]);
 
   const handleAddFavorite = (pokemon) => {
-    saveFavorite(pokemon);
+    actions.saveFavorite(pokemon);
     setFavoritesList([...favoritesList, pokemon]);
   };
 
   const handleRemoveFavorite = (pokemon) => {
-    removeFavorite(pokemon);
+    actions.removeFavorite(pokemon);
     const newFavoritesList = favoritesList.filter(
       (favorite) => favorite.name !== pokemon.name
     );
@@ -56,19 +57,19 @@ function App() {
     setSearchPokemonList('');
     if (searchTerm !== '') {
       setSearchTerm(searchTerm);
-      const response = await searchPokemon(searchTerm);
+      const response = await actions.searchPokemon(searchTerm);
       setSearchPokemonList(response);
     }
   };
 
   const handlePokemonClick = async (url, name) => {
-    const response = await getPokemon(url);
+    const response = await actions.getPokemon(url);
     setConsFavorite({ name: name, url: url })
     setCurrentPokemon(response);
 
   };
   const handlePagPokemonList = async (url, pag) => {
-    const response = await pagPokemonList(url);
+    const response = await actions.pagPokemonList(url);
     pag === 'next' ? setNpag(Npag + 1) : setNpag(Npag - 1)
     response.previous ? setPrevPokemonList(response.previous) : setPrevPokemonList('')
     response.next ? setNextPokemonList(response.next) : setNextPokemonList('')

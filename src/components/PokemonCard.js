@@ -11,7 +11,6 @@ function PokemonCard({
     handlePokemonClick,
     favoritesList
 }) {
-    //console.log(pokemon)
     const [favorite, setFavorite] = useState(isFavorite);
     const idImg = pokemon.url.split('/')[6];
     useEffect(() => {
