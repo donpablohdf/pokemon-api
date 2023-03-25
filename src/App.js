@@ -50,7 +50,7 @@ function App() {
   const handleSearch = async (searchTerm) => {
     setSearchTerm(searchTerm);
     const response = await searchPokemon(searchTerm);
-    setSearchPokemonList(response.results);
+    setSearchPokemonList(response);
   };
 
   const handlePokemonClick = async (url, name) => {

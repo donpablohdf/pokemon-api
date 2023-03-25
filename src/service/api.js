@@ -7,14 +7,17 @@ export const getPokemonList = async () => {
     return response.data;
 };
 export const searchPokemon = async (searchTerm = '') => {
-    const response = await axios.get(`${API_URL}pokemon/?limit=100&offset=100`);
-    const data = response.data
-    console.log(data)
-    return response.data;
+    const response = await axios.get(`${API_URL}pokemon/?limit=3200&offset=0`);
+    const pokemons = await response.data.results
+    const search = searchTerm.replace(/[A-Z\s]/g, '');
+    const filteredPokemons = pokemons.filter((pokemon) =>
+        pokemon.name.toLowerCase().includes(search)
+    );
+    return filteredPokemons;
 };
 
 export const getPokemon = async (url) => {
     const response = await axios.get(url);
-    
+
     return response.data;
 };
