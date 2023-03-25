@@ -13,6 +13,7 @@ window.addEventListener('beforeunload', function () {
 
 function App() {
   const [pokemonList, setPokemonList] = useState([]);
+  const [searchPokemonList, setSearchPokemonList] = useState([]);
   const [favoritesList, setFavoritesList] = useState([]);
   const [currentPokemon, setCurrentPokemon] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -49,7 +50,7 @@ function App() {
   const handleSearch = async (searchTerm) => {
     setSearchTerm(searchTerm);
     const response = await searchPokemon(searchTerm);
-    setPokemonList(response.results);
+    setSearchPokemonList(response.results);
   };
 
   const handlePokemonClick = async (url, name) => {
@@ -64,7 +65,6 @@ function App() {
   };
 
   const isPokemonFavorite = (pokemon) => {
-    console.log("ES FAVORITO" +favoritesList.some((favorite) => favorite.name === pokemon.name))
     return favoritesList.some((favorite) => favorite.name === pokemon.name);
 
   };
@@ -92,10 +92,10 @@ function App() {
           {searchTerm !== '' && (
             <div>
               Resultados de búsqueda para: <strong>{searchTerm}</strong>
-              {pokemonList.length === 0 ? (
+              {searchPokemonList.length === 0 ? (
                 <p>No se encontraron resultados para la búsqueda.</p>
               ) : (
-                pokemonList.map((pokemon, index) => (
+                searchPokemonList.map((pokemon, index) => (
                   <PokemonCard
                     key={index}
                     pokemon={pokemon}

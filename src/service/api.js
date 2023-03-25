@@ -7,7 +7,9 @@ export const getPokemonList = async () => {
     return response.data;
 };
 export const searchPokemon = async (searchTerm = '') => {
-    const response = await axios.get(`${API_URL}pokemon/?limit=20&offset=0&q=${searchTerm}`);
+    const response = await axios.get(`${API_URL}pokemon/?limit=100&offset=100`);
+    const data = response.data
+    console.log(data)
     return response.data;
 };
 
