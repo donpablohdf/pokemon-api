@@ -15,6 +15,6 @@ export const getFavorites = () => {
 
 export const removeFavorite = (pokemon) => {
     let favorites = getFavorites();
-    favorites = favorites.filter((favorite) => favorite.id !== pokemon.id);
+    favorites = favorites.filter((favorite) => favorite.name !== pokemon.name);
     localStorage.setItem('favorites', JSON.stringify(favorites));
 };

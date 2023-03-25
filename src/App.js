@@ -4,7 +4,7 @@ import PokemonCard from './components/PokemonCard';
 import SearchBar from './components/SearchBar';
 import Favorites from './components/Favorites';
 import PokemonDetail from './components/PokemonDetail';
-import { getPokemonList, getPokemon, searchPokemon } from './service/api';
+import { getPokemonList, getPokemon, searchPokemon, pagPokemonList } from './service/api';
 import { saveFavorite, getFavorites, removeFavorite } from './service/utils';
 import Navbar from './components/Navbar';
 window.addEventListener('beforeunload', function () {
@@ -13,6 +13,8 @@ window.addEventListener('beforeunload', function () {
 
 function App() {
   const [pokemonList, setPokemonList] = useState([]);
+  const [nextPokemonList, setNextPokemonList] = useState('');
+  const [prevPokemonList, setPrevPokemonList] = useState('');
   const [searchPokemonList, setSearchPokemonList] = useState([]);
   const [favoritesList, setFavoritesList] = useState([]);
   const [currentPokemon, setCurrentPokemon] = useState(null);
@@ -23,13 +25,16 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
       const response = await getPokemonList();
+      response.next ? setNextPokemonList(response.next) : setNextPokemonList('')
+      response.previous ? setPrevPokemonList(response.previous) : setPrevPokemonList('')
+
       setPokemonList(response.results);
     };
     fetchData();
-    
+
   }, []);
   useEffect(() => {
-    
+
     const favorites = getFavorites();
     setFavoritesList(favorites);
   }, []);
@@ -55,9 +60,15 @@ function App() {
 
   const handlePokemonClick = async (url, name) => {
     const response = await getPokemon(url);
-    setConsFavorite({name: name, url: url})
+    setConsFavorite({ name: name, url: url })
     setCurrentPokemon(response);
-    
+
+  };
+  const handlePagPokemonList = async (url) => {
+    const response = await pagPokemonList(url);
+    response.next ? setNextPokemonList(response.next) : setNextPokemonList('')
+    response.previous ? setPrevPokemonList(response.previous) : setPrevPokemonList('')
+    setPokemonList(response.results);
   };
 
   const handleThemeChange = () => {
@@ -75,6 +86,8 @@ function App() {
       <SearchBar handleSearch={handleSearch} />
       <div className="container">
         <div className="pokemon-list">
+          {nextPokemonList? <button onClick={() =>{handlePagPokemonList(nextPokemonList)}}>Next</button> : ''}
+          {prevPokemonList? <button onClick={() =>{handlePagPokemonList(prevPokemonList)}}>previous</button> : ''}
           {pokemonList.map((pokemon, index) => (
 
             <PokemonCard

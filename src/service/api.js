@@ -4,6 +4,12 @@ const API_URL = 'https://pokeapi.co/api/v2/';
 
 export const getPokemonList = async () => {
     const response = await axios.get(`${API_URL}pokemon/?limit=20&offset=0`);
+    //console.log(response.data)
+    return response.data;
+};
+export const pagPokemonList = async (url) => {
+    const response = await axios.get(url);
+    //console.log(response.data)
     return response.data;
 };
 export const searchPokemon = async (searchTerm = '') => {
