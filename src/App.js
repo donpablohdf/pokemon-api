@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './css/App.css';
 import PokemonCard from './components/PokemonCard';
-import SearchBar from './components/SearchBar';
 import Favorites from './components/Favorites';
 import PokemonDetail from './components/PokemonDetail';
 import { getPokemonList, getPokemon, searchPokemon, pagPokemonList } from './service/api';
@@ -81,9 +80,8 @@ function App() {
   };
   return (
     <div className={`App ${theme}`}>
-      <Navbar onThemeChange={handleThemeChange} favoriteList={favoritesList} />
+      <Navbar onThemeChange={handleThemeChange} handleSearch={handleSearch} />
       <h1>Pokemon App</h1>
-      <SearchBar handleSearch={handleSearch} />
       <div className="container">
         <div className="pokemon-list">
           {nextPokemonList? <button onClick={() =>{handlePagPokemonList(nextPokemonList)}}>Next</button> : ''}
